@@ -1,2 +1,2 @@
-# back_end_budget_tracker
+# Back-end Budget Tracker
 Ada capstone back-end repository
