@@ -32,8 +32,8 @@ def create_app(test_config=None):
     from .routes.expense_routes import expense_bp
     app.register_blueprint(expense_bp)
 
-    from .routes.budget_routes import budget_bp
-    app.register_blueprint(budget_bp)
+    # from .routes.budget_routes import budget_bp
+    # app.register_blueprint(budget_bp)
 
     CORS(app)
     return app
