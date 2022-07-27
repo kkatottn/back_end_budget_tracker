@@ -6,31 +6,39 @@ from app.models.budget import Budget
 
 budget_bp = Blueprint('budget_bp', __name__, url_prefix='')
 
-@budget_bp.route("/<user_id>", methods=['GET'])
+@budget_bp.route("/<user_id>/budget", methods=['GET'])
 def get_budget(user_id):
-    current_user = User.query.get(user_id)
-    current_budget = current_user.budget
+    params = request.args
+    month = params['month']
+    year = params['year']
+    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year)
     
     return current_budget
 
-@budget_bp.route("/<user_id>", methods=['POST'])
+@budget_bp.route("/<user_id>/budget", methods=['POST'])
 def new_budget(user_id):
     request_body = request.get_json()
     
     current_user = User.query.get(user_id)
-    new_budget = Budget(amount=request_body['amount'], user = current_user)
+    new_budget = Budget(amount=request_body['amount'], user = current_user, month=request_body['month'], year=request_body['year'])
 
     db.session.add(new_budget)
     db.session.commit()
-    return {
+    return jsonify({
         'id': new_budget.budget_id,
         'amount': new_budget.amount,
         'msg': f"A budget of ${new_budget.amount} has been set."
-    }, 201
+    }), 201
 
 @budget_bp.route("/<budget_id>", methods=['PATCH'])
 def edit_budget(budget_id):
     request_body = request.get_json()
+    current_budget = Budget.query.get(budget_id)
+    current_budget.amount = request_body['amount']
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": f"Budget has been updated to ${current_budget.amount}"
+    })
     
-    current_budget = User.query.get(user_id)
-    new_budget = Budget(amount=request_body['amount'], user = current_user)
