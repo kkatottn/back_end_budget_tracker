@@ -8,16 +8,13 @@ expense_bp = Blueprint('expense_bp', __name__, url_prefix='')
 @expense_bp.route("/<user_id>/expense", methods=['GET'])
 def get_month_expenses(user_id):
     params = request.args
+    month = params['month']
+    year = params['year']
 
     if len(params) == 2:
-        month = params['month']
-        year = params['year']
         expenses = Expense.query.filter(Expense.user_id == user_id and Expense.month == month and Expense.year == year)
     elif len(params) == 3:
-        month = params['month']
-        year = params['year']
         category = params['category']
-
         expenses = Expense.query.filter(Expense.user_id == user_id and Expense.month == month and Expense.year == year and Expense.category == category)
     
     return expenses
