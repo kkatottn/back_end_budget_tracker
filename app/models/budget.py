@@ -1,4 +1,3 @@
-from sqlalchemy import PrimaryKeyConstraint
 from app import db
 
 class Budget(db.Model):
