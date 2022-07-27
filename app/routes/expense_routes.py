@@ -33,7 +33,7 @@ def add_new_expense(user_id):
     db.session.commit()
     return jsonify({
         'id': new_expense.expense_id,
-        'description': new_expense.description
+        'description': new_expense.description,
         'msg': f'Expense with id: {new_expense.expense_id} has successfully created an account'
     }), 201
 

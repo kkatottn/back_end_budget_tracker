@@ -8,19 +8,14 @@ from app.models.category import Category
 category_bp = Blueprint('category_bp', __name__, url_prefix='')
 
 
-# @category_bp.route("/<user_id>/category", methods=['GET'])
-# def new_category(user_id):
-#     request_body = request.get_json()
-    
-#     new_category = Category(amount=request_body['amount'], user_id = user_id, month=request_body['month'], year=request_body['year'])
+@category_bp.route("/<user_id>/category", methods=['GET'])
+def get_all_categories(user_id):
+    params = request.args
+    month = params['month']
+    year = params['year']    
+    categories = Category.query.filter(Category.user_id == user_id and Category.month == month and Category.year == year)
 
-#     db.session.add(new_budget)
-#     db.session.commit()
-#     return jsonify({
-#         'id': new_budget.budget_id,
-#         'amount': new_budget.amount,
-#         'msg': f"A budget of ${new_budget.amount} has been set."
-#     }), 201
+    return categories
 
 @category_bp.route("/<user_id>/category", methods=['POST'])
 def new_category(user_id):
@@ -31,7 +26,7 @@ def new_category(user_id):
     db.session.add(new_category)
     db.session.commit()
     return jsonify({
-        'id': new_category.category_id
+        'id': new_category.category_id,
         'msg': f"Category {new_category.title} has been created."
     }), 201
 
