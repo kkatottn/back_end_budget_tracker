@@ -19,8 +19,7 @@ def get_budget(user_id):
 def new_budget(user_id):
     request_body = request.get_json()
     
-    current_user = User.query.get(user_id)
-    new_budget = Budget(amount=request_body['amount'], user = current_user, month=request_body['month'], year=request_body['year'])
+    new_budget = Budget(amount=request_body['amount'], user_id = user_id, month=request_body['month'], year=request_body['year'])
 
     db.session.add(new_budget)
     db.session.commit()

@@ -9,12 +9,12 @@ user_bp = Blueprint('user_bp', __name__, url_prefix='/user')
 def get_user(user_email):
     #valide if this email exists in our DB
 
-    selected_user = User.query.filter(User.email == user_email)
+    current_user = User.query.filter(User.email == user_email)
 
-    if not selected_user:
+    if not current_user:
         abort(make_response({'msg': 'user not found'}, 404))
     
-    return selected_user
+    return current_user
     
 
 @user_bp.route("", methods=['POST'])
