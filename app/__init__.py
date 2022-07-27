@@ -13,16 +13,13 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    if test_config is None:
-        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 
-    else:
-        app.config["TESTING"] = True
-        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_TEST_DATABASE_URI")
 
     from .models.user import User
     from .models.expense import Expense
     from .models.budget import Budget
+    from .models.category import Category
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -33,8 +30,11 @@ def create_app(test_config=None):
     from .routes.expense_routes import expense_bp
     app.register_blueprint(expense_bp)
 
-    # from .routes.budget_routes import budget_bp
-    # app.register_blueprint(budget_bp)
+    from .routes.budget_routes import budget_bp
+    app.register_blueprint(budget_bp)
+
+    from .routes.category_routes import category_bp
+    app.register_blueprint(category_bp)
 
     CORS(app)
     app.config['CORS_HEADERS'] = 'Content-Type'
