@@ -7,4 +7,4 @@ class Budget(db.Model):
     month = db.Column(db.Integer)
     year = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    user = db.relationship("User", backpopulates='budget')
+    user = db.relationship("User", back_populates='budget')
