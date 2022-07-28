@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import User
 from app.models.budget import Budget
-
+from sqlalchemy import and_
 budget_bp = Blueprint('budget_bp', __name__)
 
 @budget_bp.route("/<user_id>/budget", methods=['GET'])
@@ -10,7 +10,7 @@ def get_budget(user_id):
     params = request.args
     month = params['month']
     year = params['year']
-    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id).first()
+    current_budget = Budget.query.filter(and_(Budget.month == month, Budget.year == year, user_id == user_id)).first()
     
     if not current_budget:
         return {"msg":f"User with user ID {user_id} didn't set budget yet"}
@@ -38,7 +38,7 @@ def edit_budget(user_id):
     year = params['year']
 
     request_body = request.get_json()
-    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id).first()
+    current_budget = Budget.query.filter(and_(Budget.month == month, Budget.year == year, user_id == user_id)).first()
     current_budget.amount = request_body['amount']
 
     db.session.commit()

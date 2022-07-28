@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import User
 from app.models.expense import Expense
+from sqlalchemy import and_
 
 expense_bp = Blueprint('expense_bp', __name__, url_prefix='')
 
@@ -11,13 +12,22 @@ def get_month_expenses(user_id):
     month = params['month']
     year = params['year']
 
-    if len(params) == 2:
-        expenses = Expense.query.filter(Expense.user_id == user_id and Expense.month == month and Expense.year == year)
-    elif len(params) == 3:
-        category = params['category']
-        expenses = Expense.query.filter(Expense.user_id == user_id and Expense.month == month and Expense.year == year and Expense.category == category)
+    # we do this for when we want to get all expenses for a certain month, regardless of category
+
+    if 'category_id' in params:
+        category_id = params['category_id']
+        expenses = Expense.query.filter(and_(Expense.user_id == user_id, Expense.month == month, Expense.year == year, Expense.category_id == category_id)).all()
+        user_expenses = []
+        for expense in expenses:
+            user_expenses.append({"expense_id": expense.expense_id, "amount": str(expense.amount), "description": expense.description, "month": expense.month, "year": expense.year, "category_id": expense.category_id, "msg": "we're in if statement"})
     
-    return expenses
+    else:
+        expenses = Expense.query.filter(and_(Expense.user_id == user_id, Expense.month == month, Expense.year == year)).all()
+        user_expenses = []
+        for expense in expenses:
+            user_expenses.append({"expense_id": expense.expense_id, "amount": str(expense.amount), "description": expense.description, "month": expense.month, "year": expense.year, "category_id": expense.category_id})
+
+    return jsonify({"user expenses": user_expenses})
 
 
 @expense_bp.route("/<user_id>/expense", methods=['POST'])
@@ -31,7 +41,7 @@ def add_new_expense(user_id):
     return jsonify({
         'id': new_expense.expense_id,
         'description': new_expense.description,
-        'msg': f'Expense with id: {new_expense.expense_id} has successfully created an account'
+        'msg': f'Expense with id: {new_expense.expense_id} has successfully been added'
     }), 201
 
 

@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import User
 from app.models.category import Category
-
+from sqlalchemy import and_
 category_bp = Blueprint('category_bp', __name__, url_prefix='')
 
 
@@ -11,7 +11,7 @@ def get_all_user_categories(user_id):
     params = request.args
     month = params['month']
     year = params['year']    
-    categories = Category.query.filter(Category.user_id == user_id and Category.month == month and Category.year == year).all()
+    categories = Category.query.filter(and_(Category.user_id == user_id, Category.month == month, Category.year == year)).all()
 
 
     user_categories = []
