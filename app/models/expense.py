@@ -11,4 +11,12 @@ class Expense(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id'), nullable=False)
     category = db.relationship('Category', back_populates='expenses')
 
-    
+    def to_dict(self):
+        return {
+            "expense_id": self.expense_id,
+            "amount": self.amount,
+            "description": self.description,
+            "month": self.month,
+            "year": self.year,
+            "user_id": self.user_id
+            }

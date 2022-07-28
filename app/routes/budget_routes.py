@@ -10,9 +10,12 @@ def get_budget(user_id):
     params = request.args
     month = params['month']
     year = params['year']
-    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id)
+    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id).first()
     
-    return current_budget
+    if not current_budget:
+        return {"msg":f"User with user ID {user_id} didn't set budget yet"}
+
+    return {"budget_id": current_budget.budget_id, "amount": current_budget.amount, "month": current_budget.month, "year":current_budget.year}
 
 @budget_bp.route("/<user_id>/budget", methods=['POST'])
 def new_budget(user_id):
@@ -28,10 +31,14 @@ def new_budget(user_id):
         'msg': f"A budget of ${new_budget.amount} has been set."
     }), 201
 
-@budget_bp.route("/budget/<budget_id>", methods=['PATCH'])
-def edit_budget(budget_id):
+@budget_bp.route("/<user_id>/budget", methods=['PATCH'])
+def edit_budget(user_id):
+    params = request.args
+    month = params['month']
+    year = params['year']
+
     request_body = request.get_json()
-    current_budget = Budget.query.get(budget_id)
+    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id).first()
     current_budget.amount = request_body['amount']
 
     db.session.commit()

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response, abort
+from requests import session
 from app import db
 from datetime import datetime
 from app.models.user import User
@@ -9,13 +10,12 @@ user_bp = Blueprint('user_bp', __name__, url_prefix='/user')
 def get_user(user_email):
     #valide if this email exists in our DB
 
-    current_user = User.query.filter(User.email == user_email)
+    current_user = User.query.filter(User.email == user_email).first()
 
     if not current_user:
         abort(make_response({'msg': 'user not found'}, 404))
     
-    return current_user
-    
+    return jsonify({"user_id": current_user.user_id, "id_token": current_user.id_token, "email": current_user.email, "name": current_user.name})    
 
 @user_bp.route("", methods=['POST'])
 def new_user():

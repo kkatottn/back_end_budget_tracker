@@ -9,4 +9,11 @@ class User(db.Model):
     budget = db.relationship("Budget", back_populates="user", lazy=True)
     category = db.relationship("Category", back_populates="user", lazy=True)
 
+    # def to_dict(self):
+    #     return {
+    #         "id": self.user_id,
+    #         "id_token": self.id_token,
+    #         "email": self.email,
+    #         "name": self.name,
+    #         }
 
