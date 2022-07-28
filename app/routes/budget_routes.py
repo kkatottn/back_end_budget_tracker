@@ -10,7 +10,7 @@ def get_budget(user_id):
     params = request.args
     month = params['month']
     year = params['year']
-    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year)
+    current_budget = Budget.query.filter(Budget.month == month and Budget.year == year and user_id == user_id)
     
     return current_budget
 
