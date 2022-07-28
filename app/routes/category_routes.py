@@ -19,7 +19,7 @@ def get_all_categories(user_id):
 def new_category(user_id):
     request_body = request.get_json()
     
-    new_category = Category(title=request_body['title'], user_id = user_id)
+    new_category = Category(title=request_body['title'], user_id=user_id)
 
     db.session.add(new_category)
     db.session.commit()
