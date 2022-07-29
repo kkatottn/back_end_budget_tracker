@@ -33,13 +33,16 @@ def get_month_expenses(user_id):
 @expense_bp.route("/<user_id>/expense", methods=['POST'])
 def add_new_expense(user_id):
     request_body = request.get_json()
+
+    if "amount" or "description" or "category_id" or "month" or "year" not in request_body:
+        return jsonify({"details": "Missing parts in request body"}), 400
     
     new_expense = Expense(amount=request_body['amount'],description=request_body['description'],user_id=user_id,category_id=request_body['category_id'],month=request_body['month'],year=request_body['year'])
 
     db.session.add(new_expense)
     db.session.commit()
     return jsonify({
-        'id': new_expense.expense_id,
+        'expense_id': new_expense.expense_id,
         'description': new_expense.description,
         'msg': f'Expense with id: {new_expense.expense_id} has successfully been added'
     }), 201
@@ -57,3 +60,13 @@ def edit_expense(expense_id):
 
     db.session.commit()
     return jsonify ({"msg":"Expense has been edited"})
+
+@expense_bp.route("/expense/<expense_id>", methods=["DELETE"])
+def delete_one_goal(expense_id):
+
+    current_expense = Expense.query.get(expense_id)
+
+    db.session.delete(current_expense)
+    db.session.commit()
+
+    return jsonify({"msg": f'Expense {current_expense.description} successfully deleted'})

@@ -20,6 +20,9 @@ def get_user(user_email):
 @user_bp.route("", methods=['POST'])
 def new_user():
     request_body = request.get_json()
+
+    if "id_token" or "email" or "name" not in request_body:
+        return jsonify({"details": "missing part in request body"}), 400
     
     new_user = User(id_token=request_body['id_token'], email=request_body['email'], name=request_body['name'])
 

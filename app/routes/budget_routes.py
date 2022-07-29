@@ -38,6 +38,7 @@ def edit_budget(user_id):
     year = params['year']
 
     request_body = request.get_json()
+    # do we not need this line?
     current_budget = Budget.query.filter(and_(Budget.month == month, Budget.year == year, user_id == user_id)).first()
     current_budget.amount = request_body['amount']
 

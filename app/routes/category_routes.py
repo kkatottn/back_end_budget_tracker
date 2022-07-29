@@ -57,3 +57,12 @@ def new_default_category():
         'msg': f"Category {new_category.title} has been created."
     }), 201
 
+@category_bp.route("/category/<category_id>", methods=["DELETE"])
+def delete_one_goal(category_id):
+
+    current_category = Category.query.get(category_id)
+
+    db.session.delete(current_category)
+    db.session.commit()
+
+    return jsonify({"msg": f'Category {current_category.title} successfully deleted'})
