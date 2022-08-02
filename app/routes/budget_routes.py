@@ -33,13 +33,13 @@ def new_budget(user_id):
 
 @budget_bp.route("/<user_id>/budget", methods=['PATCH'])
 def edit_budget(user_id):
-    params = request.args
-    month = params['month']
-    year = params['year']
+    # params = request.args
+    # month = params['month']
+    # year = params['year']
 
     request_body = request.get_json()
     # do we not need this line?
-    current_budget = Budget.query.filter(and_(Budget.month == month, Budget.year == year, user_id == user_id)).first()
+    current_budget = Budget.query.filter(and_(Budget.month == request_body["month"], Budget.year == request_body["year"], user_id == user_id)).first()
     current_budget.amount = request_body['amount']
 
     db.session.commit()
