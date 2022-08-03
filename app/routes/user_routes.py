@@ -22,8 +22,10 @@ def new_user():
     request_body = request.get_json()
 
     # if "id_token" or "email" or "name" not in request_body:
-    if "email" or "name" not in request_body:
-        return jsonify({"details": "missing part in request body"}), 400
+    if "email" not in request_body:
+        return jsonify({"details": "missing email in request body"}), 400
+    if "name" not in request_body:
+        return jsonify({"details": "missing name in request body"}), 400
     
     new_user = User(email=request_body['email'], name=request_body['name'])
 
