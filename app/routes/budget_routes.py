@@ -10,7 +10,7 @@ def get_budget(user_id):
     params = request.args
     month = params['month']
     year = params['year']
-    current_budget = Budget.query.filter(and_(user_id == user_id, Budget.month == month, Budget.year == year)).first()
+    current_budget = Budget.query.filter(and_(Budget.user_id == user_id, Budget.month == month, Budget.year == year)).first()
     
     if not current_budget:
         return {"msg":f"User with user ID {user_id} didn't set budget yet"}
@@ -26,7 +26,7 @@ def new_budget(user_id):
     db.session.add(new_budget)
     db.session.commit()
     return jsonify({
-        'id': new_budget.budget_id,
+        'budget_id': new_budget.budget_id,
         'user_id': new_budget.user_id,
         'amount': new_budget.amount,
         'msg': f"A budget of ${new_budget.amount} has been set."
@@ -40,7 +40,7 @@ def edit_budget(user_id):
 
     request_body = request.get_json()
     # do we not need this line?
-    current_budget = Budget.query.filter(and_(Budget.month == request_body["month"], Budget.year == request_body["year"], user_id == user_id)).first()
+    current_budget = Budget.query.filter(and_(Budget.month == request_body["month"], Budget.year == request_body["year"], Budget.user_id == user_id))
     current_budget.amount = request_body['amount']
 
     db.session.commit()
