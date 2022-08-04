@@ -10,7 +10,7 @@ def get_budget(user_id):
     params = request.args
     month = params['month']
     year = params['year']
-    current_budget = Budget.query.filter(and_(Budget.month == month, Budget.year == year, user_id == user_id)).first()
+    current_budget = Budget.query.filter(and_(user_id == user_id, Budget.month == month, Budget.year == year)).first()
     
     if not current_budget:
         return {"msg":f"User with user ID {user_id} didn't set budget yet"}
@@ -27,6 +27,7 @@ def new_budget(user_id):
     db.session.commit()
     return jsonify({
         'id': new_budget.budget_id,
+        'user_id': new_budget.user_id,
         'amount': new_budget.amount,
         'msg': f"A budget of ${new_budget.amount} has been set."
     }), 201
