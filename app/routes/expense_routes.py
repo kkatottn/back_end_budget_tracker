@@ -34,7 +34,7 @@ def get_month_expenses(user_id):
 def add_new_expense(user_id):
     request_body = request.get_json()
 
-    if "amount" or "description" or "category_id" or "month" or "year" not in request_body:
+    if not ("amount" or "description" or "category_id" or "month" or "year") in request_body:
         return jsonify({"details": "Missing parts in request body"}), 400
     
     new_expense = Expense(amount=request_body['amount'],description=request_body['description'],user_id=user_id,category_id=request_body['category_id'],month=request_body['month'],year=request_body['year'])
