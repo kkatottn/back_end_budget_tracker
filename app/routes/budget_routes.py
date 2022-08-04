@@ -48,3 +48,15 @@ def edit_budget(user_id):
         "msg": f"Budget has been updated to ${current_budget.amount}"
     })
     
+
+@budget_bp.route("/budget/<budget_id>", methods=['DELETE'])
+def delete_budget(budget_id):
+
+    current_budget = Budget.query.get(budget_id)
+    
+    db.session.delete(current_budget)
+    db.session.commit()
+
+    return jsonify({
+        "msg": f"Budget with id: {current_budget.budget_id} has been deleted"
+    })
