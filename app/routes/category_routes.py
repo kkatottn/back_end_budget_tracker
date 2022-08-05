@@ -3,6 +3,7 @@ from app import db
 from app.models.user import User
 from app.models.category import Category
 from sqlalchemy import and_
+from app.models.expense import Expense
 category_bp = Blueprint('category_bp', __name__, url_prefix='')
 
 
@@ -61,6 +62,9 @@ def new_default_category():
 def delete_one_goal(category_id):
 
     current_category = Category.query.get(category_id)
+    current_category_expenses = Expense.query.filter(Expense.category_id == category_id).all()
+    for expense in current_category_expenses:
+        db.session.delete(expense)
 
     db.session.delete(current_category)
     db.session.commit()
