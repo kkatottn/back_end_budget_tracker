@@ -40,7 +40,7 @@ def edit_budget(user_id):
 
     request_body = request.get_json()
     # do we not need this line?
-    current_budget = Budget.query.filter(and_(Budget.month == request_body["month"], Budget.year == request_body["year"], Budget.user_id == user_id))
+    current_budget = Budget.query.filter(and_(Budget.month == request_body["month"], Budget.year == request_body["year"], Budget.user_id == user_id)).first()
     current_budget.amount = request_body['amount']
 
     db.session.commit()
