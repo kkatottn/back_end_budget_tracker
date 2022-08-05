@@ -46,7 +46,7 @@ def edit_budget(user_id):
     db.session.commit()
 
     return jsonify({
-        "msg": f"Budget has been updated to ${current_budget.amount}"
+        "msg": f"Budget with {current_budget.budget_id} has been updated to ${current_budget.amount}"
     })
     
 
