@@ -62,7 +62,7 @@ def edit_expense(expense_id):
     return jsonify ({"msg":"Expense has been edited"})
 
 @expense_bp.route("/expense/<expense_id>", methods=["DELETE"])
-def delete_one_goal(expense_id):
+def delete_one_expense(expense_id):
 
     current_expense = Expense.query.get(expense_id)
 

@@ -59,7 +59,7 @@ def new_default_category():
     }), 201
 
 @category_bp.route("/category/<category_id>", methods=["PATCH"])
-def delete_one_goal(category_id):
+def edit_one_category(category_id):
     request_body = request.get_json()
 
     current_category = Category.query.get(category_id)
